@@ -7,4 +7,10 @@
 #define LED_PIN      4   // Red pin
 #define LED_PIN_G    17  // Green pin
 
+// Defines for the SD card slot ESP32_2432S028R	
+#define SDSPI_CS    5	
+#define SDSPI_CLK   18	
+#define SDSPI_MOSI  23	
+#define SDSPI_MISO  19
+
 #endif
