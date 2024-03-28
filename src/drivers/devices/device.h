@@ -27,6 +27,10 @@
 #include "esp32CAM.h"
 #elif defined(ESP32RGB)
 #include "esp32RGB.h"
+#elif defined(ESP32_ST7735)
+#include "esp32_st7735.h"
+#elif defined(ESP32_SSD1306)
+#include "esp32_ssd1306.h"
 
 #else
 #error "No device defined"
