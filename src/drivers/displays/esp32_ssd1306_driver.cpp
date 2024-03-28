@@ -15,12 +15,6 @@ Adafruit_SSD1306 display(WIDTH, HEIGHT, &Wire, OLED_RESET);
 #include "version.h"
 #include "monitor.h"
 
-/*
-OpenFontRender render;
-TFT_eSPI tft = TFT_eSPI();                  // Invoke library, pins defined in User_Setup.h
-TFT_eSprite background = TFT_eSprite(&tft); // Invoke library sprite
-*/
-
 void t_qtDisplay_Init(void)
 {
   Serial.println("SSD1306 ... display init");
