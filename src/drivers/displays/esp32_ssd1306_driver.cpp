@@ -1,11 +1,11 @@
 #include "displayDriver.h"
-#include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
-#include "version.h"
-#include "monitor.h"
 
 #ifdef ESP32_SSD1306
+#include "version.h"
+#include "monitor.h"
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include <Wire.h>
 
 #define WIDTH 128
 #define HEIGHT 64
