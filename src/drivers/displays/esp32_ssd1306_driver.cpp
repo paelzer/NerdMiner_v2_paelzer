@@ -51,8 +51,7 @@ void ssd1306_Display_AlternateScreenState(void)
 
 void ssd1306_Display_AlternateRotation(void)
 {
-  Serial.println("SSD1306 ... no rotation");
-  //tft.setRotation((tft.getRotation()+1) % 4);
+  display.setRotation((display.getRotation()+2) % 4);
 }
 
 void ssd1306_Display_MinerScreen(unsigned long mElapsed)
