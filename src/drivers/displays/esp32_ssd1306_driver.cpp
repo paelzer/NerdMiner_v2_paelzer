@@ -44,9 +44,7 @@ void ssd1306_Display_Init(void)
 
 void ssd1306_Display_AlternateScreenState(void)
 {
-  //int screen_state = digitalRead(TFT_BL);
-  Serial.println("Nothing to do.... ");
-  //digitalWrite(TFT_BL, !screen_state);
+//tbd
 }
 
 void ssd1306_Display_AlternateRotation(void)
