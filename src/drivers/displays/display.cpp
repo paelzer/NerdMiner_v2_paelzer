@@ -40,6 +40,17 @@ DisplayDriver *currentDisplayDriver = &tDisplayV1Driver;
 DisplayDriver *currentDisplayDriver = &m5stickCDriver;
 #endif
 
+#ifdef ESP32_ST7735
+DisplayDriver *currentDisplayDriver = &esp32_st7735_driver;
+#endif
+
+#ifdef ESP32_SSD1306
+DisplayDriver *currentDisplayDriver = &esp32_ssd1306_driver;
+#endif
+
+#ifdef ESP32_super_mini_SSD1306
+DisplayDriver *currentDisplayDriver = &esp32_super_mini_SSD1306_driver;
+#endif
 
 // Initialize the display
 void initDisplay()
