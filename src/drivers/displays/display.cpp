@@ -52,6 +52,10 @@ DisplayDriver *currentDisplayDriver = &esp32_ssd1306_driver;
 DisplayDriver *currentDisplayDriver = &esp32_super_mini_SSD1306_driver;
 #endif
 
+#ifdef ESP32_64x32px_Matrix
+DisplayDriver *currentDisplayDriver = &esp32_64x32px_matrix_driver;
+#endif
+
 // Initialize the display
 void initDisplay()
 {
