@@ -6,21 +6,9 @@
 #include <Adafruit_GFX.h>
 #include <PxMatrix.h>
 
-//#define P_LAT 22
-//#define P_A 19
-//#define P_B 23
-//#define P_C 18
-//#define P_D 5
-//#define P_E 15
-//#define P_OE 0
-
-
-
 hw_timer_t *timer = NULL;
 portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 
-//#define matrix_width 64
-//#define matrix_height 32
 #define WIDTH 64
 #define HEIGHT 32
 
@@ -51,7 +39,7 @@ void IRAM_ATTR display_updater()
 void display_update_enable(bool is_enable)
 {
 
-#ifdef ESP32
+
   if (is_enable)
   {
     timer = timerBegin(0, 80, true);
@@ -64,14 +52,24 @@ void display_update_enable(bool is_enable)
     timerDetachInterrupt(timer);
     timerAlarmDisable(timer);
   }
-#endif
+
 }
 
 void esp32_64x32px_Matrix_Init(void)
 {
   Serial.println("SSD1306 ... display init");
 
-
+  display.begin(16);
+  display.clearDisplay();
+  display.setTextColor(myCYAN);
+  display.setCursor(2, 0);
+  display.println("NerdMiner");
+  display.setTextColor(myMAGENTA);
+  display.println("V2");
+  display_update_enable(true);
+  delay(2000);
+  display.clearDisplay();
+  Serial.println("Display cleared...");
 
 }
 
@@ -88,7 +86,7 @@ void esp32_64x32px_Matrix_AlternateRotation(void)
 void esp32_64x32px_Matrix_MinerScreen(unsigned long mElapsed)
 {
   mining_data data = getMiningData(mElapsed);
-/*
+
   // Print background screen
   display.clearDisplay(); // paint it black :-)
 
@@ -96,21 +94,23 @@ void esp32_64x32px_Matrix_MinerScreen(unsigned long mElapsed)
                 data.completedShares.c_str(), data.totalKHashes.c_str(), data.currentHashRate.c_str());
 
   // Hashrate
-  display.setTextSize(2);
-  display.setTextColor(SSD1306_WHITE); // Draw white text
-  display.setCursor(0, 0);
-  // render.setFontColor(TFT_BLACK);
-
-  display.print(data.currentHashRate.c_str());
-  display.println(F(" kH/s"));
-  display.setTextSize(1);
-  display.println();
+  //display.setTextSize(1);
+  display.drawRect(0, 0, 64, 32, myWHITE);
+  display.fillRect(1 , 1, 32, 9, myWHITE);
+  display.setCursor(2, 2);
+  display.setTextColor(myBLACK);
+  display.print(data.currentHashRate);
+  display.setTextColor(myWHITE);
+  display.print(" kH/s");
 
   // Valid Blocks
-  display.setTextSize(2);
-  display.print(data.valids.c_str());
-  // display.setTextSize(1);
-  display.println(F(" Blocks"));
+  display.setCursor(2, 11);
+  display.setTextColor(myRED);
+  display.print(data.valids);
+  display.setTextColor(myWHITE);
+  display.print("   Blocks");
+
+  display.fillRect(1, 20, 62, 11, myRED);
 
   // Mining Time
   char timeMining[15];
@@ -119,12 +119,11 @@ void esp32_64x32px_Matrix_MinerScreen(unsigned long mElapsed)
   int hours = (secElapsed - (days * 86400)) / 3600;               // Number of seconds in an hour
   int mins = (secElapsed - (days * 86400) - (hours * 3600)) / 60; // Remove the number of hours and calculate the minutes.
   int secs = secElapsed - (days * 86400) - (hours * 3600) - (mins * 60);
-  sprintf(timeMining, "%01d d %02d:%02d:%02d h", days, hours, mins, secs);
-  display.setTextSize(1);
-  display.println();
-  display.println(String(timeMining).c_str());
-  display.display();
-*/
+  sprintf(timeMining, "%01d %02d:%02d:%02d", days, hours, mins, secs);
+  display.setTextColor(myWHITE);
+  display.setCursor(2, 22);
+  display.print(String(timeMining));
+
 }
 
 // uint16_t osx=64, osy=64, omx=64, omy=64, ohx=64, ohy=64;  // Saved H, M, S x & y coords
@@ -153,24 +152,14 @@ void esp32_64x32px_Matrix_ClockScreen(unsigned long mElapsed)
 
 void esp32_64x32px_Matrix_GlobalHashScreen(unsigned long mElapsed)
 {
-  Serial.println("SSD1306 ... no global hash screen");
 }
 
 void esp32_64x32px_Matrix_LoadingScreen(void)
 {
-
-  Serial.println("SSD1306 ... no loading screen");
-  // tft.fillScreen(TFT_BLACK);
-  // tft.pushImage(0, 0, initWidth, initHeight, initScreen);
-  // tft.setTextColor(TFT_GOLD);
-  // tft.drawString(CURRENT_VERSION, 2, 100, FONT2);
 }
 
 void esp32_64x32px_Matrix_SetupScreen(void)
 {
-
-  Serial.println("SSD1306 ... no setup screen");
-  // tft.pushImage(0, 0, setupModeWidth, setupModeHeight, setupModeScreen);
 }
 
 void esp32_64x32px_Matrix_AnimateCurrentScreen(unsigned long frame)

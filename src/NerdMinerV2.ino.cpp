@@ -83,9 +83,6 @@ void setup()
 
   /******** INIT NERDMINER ************/
   Serial.println("NerdMiner v2 starting......");
-
-  /******** INIT DISPLAY ************/
-  initDisplay();
   
   /******** PRINT INIT SCREEN *****/
   drawLoadingScreen();
@@ -97,6 +94,9 @@ void setup()
   
   /******** INIT WIFI ************/
   init_WifiManager();
+
+  /******** INIT DISPLAY ************/
+  initDisplay();
 
   /******** CREATE TASK TO PRINT SCREEN *****/
   //tft.pushImage(0, 0, MinerWidth, MinerHeight, MinerScreen);
