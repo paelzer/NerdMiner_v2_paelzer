@@ -6,13 +6,16 @@
 #include <Adafruit_GFX.h>
 #include <PxMatrix.h>
 
-#define P_LAT 22
-#define P_A 19
-#define P_B 23
-#define P_C 18
-#define P_D 5
-#define P_E 15
-#define P_OE 0
+//#define P_LAT 22
+//#define P_A 19
+//#define P_B 23
+//#define P_C 18
+//#define P_D 5
+//#define P_E 15
+//#define P_OE 0
+
+
+
 hw_timer_t *timer = NULL;
 portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 
