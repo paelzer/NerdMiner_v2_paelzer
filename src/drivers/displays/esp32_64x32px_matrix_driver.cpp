@@ -248,13 +248,10 @@ void esp32_64x32px_Matrix_MinerScreen(unsigned long mElapsed)
   display.print(data.currentHashRate);
 
   // Valid Blocks
-  display.setCursor(2, 11);
+  display.setCursor(54, 10);
   display.setTextColor(myRED);
   display.print(data.valids);
-  display.setTextColor(myWHITE);
-  display.print("   Blocks");
 
-  display.fillRect(1, 20, 62, 11, myRED);
 
   // Mining Time
   char timeMining[15];
@@ -264,9 +261,9 @@ void esp32_64x32px_Matrix_MinerScreen(unsigned long mElapsed)
   int mins = (secElapsed - (days * 86400) - (hours * 3600)) / 60; // Remove the number of hours and calculate the minutes.
   int secs = secElapsed - (days * 86400) - (hours * 3600) - (mins * 60);
   sprintf(timeMining, "%01d %02d:%02d:%02d", days, hours, mins, secs);
-  display.setTextColor(myWHITE);
-  display.setCursor(2, 22);
-  display.print(String(timeMining));
+  //display.setTextColor(myWHITE);
+  //display.setCursor(2, 22);
+  //display.print(String(timeMining));
 
 }
 
