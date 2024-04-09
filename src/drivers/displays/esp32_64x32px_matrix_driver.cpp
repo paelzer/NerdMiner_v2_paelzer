@@ -243,7 +243,7 @@ void esp32_64x32px_Matrix_MinerScreen(unsigned long mElapsed)
   // Hashrate
   //display.setTextSize(1);
   drawImage(0, 0);
-  display.setCursor(5, 25);
+  display.setCursor(5, 23);
   display.setTextColor(myBLACK);
   display.print(data.currentHashRate);
 
