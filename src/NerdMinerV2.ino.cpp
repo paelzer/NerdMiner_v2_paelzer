@@ -86,19 +86,40 @@ void setup()
   /******** INIT NERDMINER ************/
   Serial.println("NerdMiner v2 starting......");
 
+// The PxMatrix library requieres WiFi connection to be established before initDisplay()
+#ifdef ESP32_64x32px_Matrix
+
+  /******** INIT WIFI ************/
+  init_WifiManager();
+
   /******** INIT DISPLAY ************/
   initDisplay();
-  
+
   /******** PRINT INIT SCREEN *****/
   drawLoadingScreen();
-  delay(2*SECOND_MS);
+  delay(2000);
 
   /******** SHOW LED INIT STATUS (devices without screen) *****/
   mMonitor.NerdStatus = NM_waitingConfig;
   doLedStuff(0);
-  
+
+#else
+
+  /******** INIT DISPLAY ************/
+  initDisplay();
+
+  /******** PRINT INIT SCREEN *****/
+  drawLoadingScreen();
+  delay(2 * SECOND_MS);
+
+  /******** SHOW LED INIT STATUS (devices without screen) *****/
+  mMonitor.NerdStatus = NM_waitingConfig;
+  doLedStuff(0);
+
   /******** INIT WIFI ************/
   init_WifiManager();
+
+#endif
 
   /******** CREATE TASK TO PRINT SCREEN *****/
   //tft.pushImage(0, 0, MinerWidth, MinerHeight, MinerScreen);
