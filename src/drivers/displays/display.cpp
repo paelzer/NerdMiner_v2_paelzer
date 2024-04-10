@@ -52,6 +52,9 @@ DisplayDriver *currentDisplayDriver = &m5stickCDriver;
 DisplayDriver *currentDisplayDriver = &t_hmiDisplayDriver;
 #endif
 
+#ifdef ESP32_64x32px_Matrix
+DisplayDriver *currentDisplayDriver = &esp32_64x32px_matrix_driver;
+#endif
 
 // Initialize the display
 void initDisplay()
