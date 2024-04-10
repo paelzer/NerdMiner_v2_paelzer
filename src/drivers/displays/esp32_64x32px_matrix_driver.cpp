@@ -5,6 +5,7 @@
 #include "monitor.h"
 #include <Adafruit_GFX.h>
 #include <PxMatrix.h>
+#include "media/images_64_32.h"
 
 hw_timer_t *timer = NULL;
 portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
@@ -28,7 +29,7 @@ uint16_t myBLACK = display.color565(0, 0, 0);
 
 uint16_t myCOLORS[8] = {myRED, myGREEN, myBLUE, myWHITE, myYELLOW, myCYAN, myMAGENTA, myBLACK};
 
-
+/*
 uint16_t static matrix_bg[] = {
 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,   // 0x0010 (16) pixels
 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,   // 0x0020 (32) pixels
@@ -159,9 +160,11 @@ uint16_t static matrix_bg[] = {
 0xFFE0, 0xFFE0, 0xFFE0, 0xFFE0, 0xFFE0, 0xFFE0, 0xFFE0, 0x14D7, 0x14D7, 0x14D7, 0x14D7, 0x14D7, 0x14D7, 0x14D7, 0x14D7, 0x14D7,   // 0x07F0 (2032) pixels
 0x14D7, 0x14D7, 0x14D7, 0x14D7, 0x14D7, 0x14D7, 0x14D7, 0x14D7, 0x14D7, 0x14D7, 0x14D7, 0x14D7, 0x14D7, 0x14D7, 0x14D7, 0x14D7,   // 0x0800 (2048) pixels
 };
+*/
 
 void drawImage(int x, int y)
 {
+ //#include "media/images_64_32.h"
  int imageHeight = 32;
  int imageWidth = 64;
  int counter = 0;
@@ -169,7 +172,7 @@ void drawImage(int x, int y)
  {
    for (int xx = 0; xx < imageWidth; xx++)
    {
-     display.drawPixel(xx + x , yy + y, matrix_bg[counter]);
+     display.drawPixel(xx + x , yy + y, miner_bg[counter]);
      counter++;
    }
  }
