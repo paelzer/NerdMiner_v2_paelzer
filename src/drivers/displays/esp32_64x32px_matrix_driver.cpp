@@ -122,13 +122,13 @@ void esp32_64x32px_Matrix_MinerScreen(unsigned long mElapsed)
   display.print(data.valids);
 
   // Mining Time
-  //char timeMining[15];
-  //unsigned long secElapsed = millis() / 1000;
-  //int days = secElapsed / 86400;
-  //int hours = (secElapsed - (days * 86400)) / 3600;               // Number of seconds in an hour
-  //int mins = (secElapsed - (days * 86400) - (hours * 3600)) / 60; // Remove the number of hours and calculate the minutes.
-  //int secs = secElapsed - (days * 86400) - (hours * 3600) - (mins * 60);
-  //sprintf(timeMining, "%01d %02d:%02d:%02d", days, hours, mins, secs);
+  // char timeMining[15];
+  // unsigned long secElapsed = millis() / 1000;
+  // int days = secElapsed / 86400;
+  // int hours = (secElapsed - (days * 86400)) / 3600;               // Number of seconds in an hour
+  // int mins = (secElapsed - (days * 86400) - (hours * 3600)) / 60; // Remove the number of hours and calculate the minutes.
+  // int secs = secElapsed - (days * 86400) - (hours * 3600) - (mins * 60);
+  // sprintf(timeMining, "%01d %02d:%02d:%02d", days, hours, mins, secs);
   // display.setTextColor(myWHITE);
   // display.setCursor(2, 22);
   // display.print(String(timeMining));
@@ -139,25 +139,47 @@ void esp32_64x32px_Matrix_ClockScreen(unsigned long mElapsed)
 {
   clock_data_t data = getClockData_t(mElapsed);
 
-    char clocktimeNow[8];
-    //uint8_t secs = data.currentSeconds;
-    uint8_t mins = data.currentMinutes;
-    uint8_t hours = data.currentHours;
+  char clocktimeNow[8];
+  // uint8_t secs = data.currentSeconds;
+  uint8_t mins = data.currentMinutes;
+  uint8_t hours = data.currentHours;
 
-    sprintf(clocktimeNow, "%02d:%02d", hours, mins);
+  sprintf(clocktimeNow, "%02d:%02d", hours, mins);
 
-      if (hasChangedScreen)
-      display.clearDisplay(); // paint it black :-)
-      drawImage(0, 0, clock_bg);
-      hasChangedScreen = false;
+  if (hasChangedScreen)
+    display.clearDisplay(); // paint it black :-)
+  drawImage(0, 0, clock_bg);
+  hasChangedScreen = false;
 
-    //drawImage(0, 0, clock_bg);
+  // drawImage(0, 0, clock_bg);
 
-    //display.setTextSize(2);              // Normal 1:1 pixel scale
-    display.setTextColor(myRED);
-    display.setCursor(32, 2);             // Start at top-left corner
+  // display.setTextSize(2);              // Normal 1:1 pixel scale
+  display.setTextColor(myRED);
+  display.setCursor(32, 2);
 
-    display.println(clocktimeNow);
+  display.println(clocktimeNow);
+}
+
+void esp32_64x32px_Matrix_BTCprice(unsigned long mElapsed)
+{
+  clock_data data = getClockData(mElapsed);
+
+  // Print background screen
+  // display.clearDisplay(); // paint it black :-)
+
+  Serial.printf(">>> Completed %s share(s), %s Khashes, avg. hashrate %s KH/s\n",
+                data.completedShares.c_str(), data.totalKHashes.c_str(), data.currentHashRate.c_str());
+
+  // Hashrate
+  // display.setTextSize(1);
+  drawImage(0, 0, clock_bg);
+  display.setCursor(2, 23);
+  display.setTextColor(myBLACK);
+  display.print(data.currentHashRate);
+  
+  display.setTextColor(myRED);
+  display.setCursor(26, 2); // Start at top-left corner
+  display.println(data.btcPrice);
 
 }
 
@@ -181,8 +203,8 @@ void esp32_64x32px_Matrix_DoLedStuff(unsigned long frame)
 {
 }
 
-//CyclicScreenFunction esp32_64x32px_MatrixCyclicScreens[] = {esp32_64x32px_Matrix_MinerScreen, esp32_64x32px_Matrix_ClockScreen};
-CyclicScreenFunction esp32_64x32px_MatrixCyclicScreens[] = {esp32_64x32px_Matrix_ClockScreen, esp32_64x32px_Matrix_MinerScreen};
+CyclicScreenFunction esp32_64x32px_MatrixCyclicScreens[] = {esp32_64x32px_Matrix_MinerScreen, esp32_64x32px_Matrix_BTCprice, esp32_64x32px_Matrix_ClockScreen};
+// CyclicScreenFunction esp32_64x32px_MatrixCyclicScreens[] = {esp32_64x32px_Matrix_ClockScreen, esp32_64x32px_Matrix_MinerScreen};
 
 DisplayDriver esp32_64x32px_matrix_driver = {
     esp32_64x32px_Matrix_Init,
