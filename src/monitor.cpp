@@ -245,7 +245,7 @@ mining_data getMiningData(unsigned long mElapsed)
   int hours = (secElapsed - (days * 86400)) / 3600;               // Number of seconds in an hour
   int mins = (secElapsed - (days * 86400) - (hours * 3600)) / 60; // Remove the number of hours and calculate the minutes.
   int secs = secElapsed - (days * 86400) - (hours * 3600) - (mins * 60);
-  sprintf(timeMining, "%01d  %02d:%02d:%02d", days, hours, mins, secs);
+  sprintf(timeMining, "%01d  %02d:%02d", days, hours, mins);
 
   data.completedShares = shares;
   data.totalMHashes = Mhashes;

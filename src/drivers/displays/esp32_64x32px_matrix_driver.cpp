@@ -110,7 +110,7 @@ void esp32_64x32px_Matrix_MinerScreen(unsigned long mElapsed)
                 data.completedShares.c_str(), data.totalKHashes.c_str(), data.currentHashRate.c_str());
 
   // Hashrate
-  // display.setTextSize(1);
+  display.setTextSize(1);
   drawImage(0, 0, miner_bg);
   display.setCursor(2, 23);
   display.setTextColor(myBLACK);
@@ -172,14 +172,25 @@ void esp32_64x32px_Matrix_BTCprice(unsigned long mElapsed)
 
   // Hashrate
   // display.setTextSize(1);
-  drawImage(0, 0, clock_bg);
+  drawImage(0, 0, price_bg);
   display.setCursor(2, 23);
   display.setTextColor(myBLACK);
   display.print(data.currentHashRate);
   
   display.setTextColor(myRED);
-  display.setCursor(26, 2); // Start at top-left corner
+  display.setCursor(24, 8); // Start at top-left corner
   display.println(data.btcPrice);
+
+}
+
+void esp32_64x32px_Matrix_uptime(unsigned long mElapsed)
+{
+  mining_data data = getMiningData(mElapsed);
+
+  drawImage(0, 0, miner_uptime);
+  display.setCursor(1, 8);
+  display.setTextColor(myRED);
+  display.print(data.timeMining);
 
 }
 
@@ -203,7 +214,7 @@ void esp32_64x32px_Matrix_DoLedStuff(unsigned long frame)
 {
 }
 
-CyclicScreenFunction esp32_64x32px_MatrixCyclicScreens[] = {esp32_64x32px_Matrix_MinerScreen, esp32_64x32px_Matrix_BTCprice, esp32_64x32px_Matrix_ClockScreen};
+CyclicScreenFunction esp32_64x32px_MatrixCyclicScreens[] = {esp32_64x32px_Matrix_MinerScreen, esp32_64x32px_Matrix_uptime, esp32_64x32px_Matrix_BTCprice, esp32_64x32px_Matrix_ClockScreen};
 // CyclicScreenFunction esp32_64x32px_MatrixCyclicScreens[] = {esp32_64x32px_Matrix_ClockScreen, esp32_64x32px_Matrix_MinerScreen};
 
 DisplayDriver esp32_64x32px_matrix_driver = {
