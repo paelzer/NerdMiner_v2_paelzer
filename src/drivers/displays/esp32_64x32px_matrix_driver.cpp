@@ -112,7 +112,7 @@ void esp32_64x32px_Matrix_MinerScreen(unsigned long mElapsed)
   // Hashrate
   display.setTextSize(1);
   drawImage(0, 0, miner_bg);
-  display.setCursor(2, 23);
+  display.setCursor(1, 24);
   display.setTextColor(myBLACK);
   display.print(data.currentHashRate);
 
@@ -158,6 +158,10 @@ void esp32_64x32px_Matrix_ClockScreen(unsigned long mElapsed)
   display.setCursor(32, 2);
 
   display.println(clocktimeNow);
+
+  display.setCursor(1, 24);
+  display.setTextColor(myBLACK);
+  display.print(data.currentHashRate);
 }
 
 void esp32_64x32px_Matrix_BTCprice(unsigned long mElapsed)
@@ -173,14 +177,13 @@ void esp32_64x32px_Matrix_BTCprice(unsigned long mElapsed)
   // Hashrate
   // display.setTextSize(1);
   drawImage(0, 0, price_bg);
-  display.setCursor(2, 23);
+  display.setCursor(1, 24);
   display.setTextColor(myBLACK);
   display.print(data.currentHashRate);
-  
+
   display.setTextColor(myRED);
   display.setCursor(24, 8); // Start at top-left corner
   display.println(data.btcPrice);
-
 }
 
 void esp32_64x32px_Matrix_uptime(unsigned long mElapsed)
@@ -192,6 +195,9 @@ void esp32_64x32px_Matrix_uptime(unsigned long mElapsed)
   display.setTextColor(myRED);
   display.print(data.timeMining);
 
+  display.setCursor(1, 24);
+  display.setTextColor(myBLACK);
+  display.print(data.currentHashRate);
 }
 
 void esp32_64x32px_Matrix_GlobalHashScreen(unsigned long mElapsed)
