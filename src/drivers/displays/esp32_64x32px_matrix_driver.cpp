@@ -15,7 +15,7 @@ portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 
 PxMATRIX display(64, 32, P_LAT, P_OE, P_A, P_B, P_C, P_D, P_E);
 
-uint8_t display_draw_time = 60; // 30-70 is usually fine
+uint8_t display_draw_time = 30; // 30-70 is usually fine
 
 // Some standard colors
 uint16_t myRED = display.color565(255, 0, 0);
