@@ -1,4 +1,4 @@
-
+#define DECODE_NEC
 #include <Wire.h>
 
 #include <Arduino.h>
@@ -15,17 +15,22 @@
 #include "drivers/storage/SDCard.h"
 #include "timeconst.h"
 
-//3 seconds WDT
+// #include "PinDefinitionsAndMore.h"
+#include <IRremote.hpp> // include the library
+
+#define IR_RECEIVE_PIN 32
+
+// 3 seconds WDT
 #define WDT_TIMEOUT 3
-//15 minutes WDT for miner task
+// 15 minutes WDT for miner task
 #define WDT_MINER_TIMEOUT 900
 
 #ifdef PIN_BUTTON_1
-  OneButton button1(PIN_BUTTON_1);
+OneButton button1(PIN_BUTTON_1);
 #endif
 
 #ifdef PIN_BUTTON_2
-  OneButton button2(PIN_BUTTON_2);
+OneButton button2(PIN_BUTTON_2);
 #endif
 
 extern monitor_data mMonitor;
@@ -35,117 +40,123 @@ SDCard SDCrd = SDCard();
 /**********************⚡ GLOBAL Vars *******************************/
 
 unsigned long start = millis();
-const char* ntpServer = "pool.ntp.org";
+const char *ntpServer = "pool.ntp.org";
 
-//void runMonitor(void *name);
+// void runMonitor(void *name);
 
 /********* INIT *****/
 void setup()
 {
-      //Init pin 15 to eneble 5V external power (LilyGo bug)
-  #ifdef PIN_ENABLE5V
-      pinMode(PIN_ENABLE5V, OUTPUT);
-      digitalWrite(PIN_ENABLE5V, HIGH);
-  #endif
+  // Init pin 15 to eneble 5V external power (LilyGo bug)
+#ifdef PIN_ENABLE5V
+  pinMode(PIN_ENABLE5V, OUTPUT);
+  digitalWrite(PIN_ENABLE5V, HIGH);
+#endif
 
 #ifdef MONITOR_SPEED
-    Serial.begin(MONITOR_SPEED);
+  Serial.begin(MONITOR_SPEED);
 #else
-    Serial.begin(115200);
-#endif //MONITOR_SPEED
+  Serial.begin(115200);
+#endif // MONITOR_SPEED
 
   Serial.setTimeout(0);
-  delay(SECOND_MS/10);
+  delay(SECOND_MS / 10);
 
   esp_task_wdt_init(WDT_MINER_TIMEOUT, true);
   // Idle task that would reset WDT never runs, because core 0 gets fully utilized
   disableCore0WDT();
-  //disableCore1WDT();
+// disableCore1WDT();
 
-  // Setup the buttons
-  #if defined(PIN_BUTTON_1) && !defined(PIN_BUTTON_2) //One button device
-    button1.setPressMs(5*SECOND_MS);
-    button1.attachClick(switchToNextScreen);
-    button1.attachDoubleClick(alternateScreenRotation);
-    button1.attachLongPressStart(reset_configuration);
-    button1.attachMultiClick(alternateScreenState);
-  #endif
+// Setup the buttons
+#if defined(PIN_BUTTON_1) && !defined(PIN_BUTTON_2) // One button device
+  button1.setPressMs(5 * SECOND_MS);
+  button1.attachClick(switchToNextScreen);
+  button1.attachDoubleClick(alternateScreenRotation);
+  button1.attachLongPressStart(reset_configuration);
+  button1.attachMultiClick(alternateScreenState);
+#endif
 
-  #if defined(PIN_BUTTON_1) && defined(PIN_BUTTON_2) //Button 1 of two button device
-    button1.setPressMs(5*SECOND_MS);
-    button1.attachClick(alternateScreenState);
-    button1.attachDoubleClick(alternateScreenRotation);
-  #endif
+#if defined(PIN_BUTTON_1) && defined(PIN_BUTTON_2) // Button 1 of two button device
+  button1.setPressMs(5 * SECOND_MS);
+  button1.attachClick(alternateScreenState);
+  button1.attachDoubleClick(alternateScreenRotation);
+#endif
 
-  #if defined(PIN_BUTTON_2) //Button 2 of two button device
-    button2.setPressMs(5*SECOND_MS);
-    button2.attachClick(switchToNextScreen);
-    button2.attachLongPressStart(reset_configuration);
-  #endif
+#if defined(PIN_BUTTON_2) // Button 2 of two button device
+  button2.setPressMs(5 * SECOND_MS);
+  button2.attachClick(switchToNextScreen);
+  button2.attachLongPressStart(reset_configuration);
+#endif
 
   /******** INIT NERDMINER ************/
   Serial.println("NerdMiner v2 starting......");
 
-// The PxMatrix library requieres WiFi connection to be established before initDisplay()
-  #ifdef ESP32_64x32px_Matrix
+  // The PxMatrix library requieres WiFi connection to be established before initDisplay()
+#ifdef ESP32_64x32px_Matrix
 
-    /******** INIT WIFI ************/
-    init_WifiManager();
+  /******** INIT WIFI ************/
+  init_WifiManager();
 
-    /******** INIT DISPLAY ************/
-    initDisplay();
+  /******** INIT DISPLAY ************/
+  initDisplay();
 
-    /******** PRINT INIT SCREEN *****/
-    drawLoadingScreen();
-    delay(2000);
+  // IR stuff
+  Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
+  IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
 
-    /******** SHOW LED INIT STATUS (devices without screen) *****/
-    mMonitor.NerdStatus = NM_waitingConfig;
-    doLedStuff(0);
+  Serial.print(F("Ready to receive IR signals of protocols: "));
+  printActiveIRProtocols(&Serial);
 
-  #else
+  /******** PRINT INIT SCREEN *****/
+  drawLoadingScreen();
+  delay(2000);
 
-    /******** INIT DISPLAY ************/
-    initDisplay();
+  /******** SHOW LED INIT STATUS (devices without screen) *****/
+  mMonitor.NerdStatus = NM_waitingConfig;
+  doLedStuff(0);
 
-    /******** PRINT INIT SCREEN *****/
-    drawLoadingScreen();
-    delay(2 * SECOND_MS);
+#else
 
-    /******** SHOW LED INIT STATUS (devices without screen) *****/
-    mMonitor.NerdStatus = NM_waitingConfig;
-    doLedStuff(0);
+  /******** INIT DISPLAY ************/
+  initDisplay();
 
-    /******** INIT WIFI ************/
-    init_WifiManager();
+  /******** PRINT INIT SCREEN *****/
+  drawLoadingScreen();
+  delay(2 * SECOND_MS);
 
-  #endif
+  /******** SHOW LED INIT STATUS (devices without screen) *****/
+  mMonitor.NerdStatus = NM_waitingConfig;
+  doLedStuff(0);
+
+  /******** INIT WIFI ************/
+  init_WifiManager();
+
+#endif
 
   /******** CREATE TASK TO PRINT SCREEN *****/
-  //tft.pushImage(0, 0, MinerWidth, MinerHeight, MinerScreen);
-  // Higher prio monitor task
+  // tft.pushImage(0, 0, MinerWidth, MinerHeight, MinerScreen);
+  //  Higher prio monitor task
   Serial.println("");
   Serial.println("Initiating tasks...");
-  char *name = (char*) malloc(32);
+  char *name = (char *)malloc(32);
   sprintf(name, "(%s)", "Monitor");
-  BaseType_t res1 = xTaskCreatePinnedToCore(runMonitor, "Monitor", 10000, (void*)name, 4, NULL,1);
+  BaseType_t res1 = xTaskCreatePinnedToCore(runMonitor, "Monitor", 10000, (void *)name, 4, NULL, 1);
 
   /******** CREATE STRATUM TASK *****/
   sprintf(name, "(%s)", "Stratum");
-  BaseType_t res2 = xTaskCreatePinnedToCore(runStratumWorker, "Stratum", 15000, (void*)name, 3, NULL,1);
-
+  BaseType_t res2 = xTaskCreatePinnedToCore(runStratumWorker, "Stratum", 15000, (void *)name, 3, NULL, 1);
 
   /******** CREATE MINER TASKS *****/
-  //for (size_t i = 0; i < THREADS; i++) {
-  //  char *name = (char*) malloc(32);
-  //  sprintf(name, "(%d)", i);
+  // for (size_t i = 0; i < THREADS; i++) {
+  //   char *name = (char*) malloc(32);
+  //   sprintf(name, "(%d)", i);
 
   // Start mining tasks
-  //BaseType_t res = xTaskCreate(runWorker, name, 35000, (void*)name, 1, NULL);
+  // BaseType_t res = xTaskCreate(runWorker, name, 35000, (void*)name, 1, NULL);
   TaskHandle_t minerTask1, minerTask2 = NULL;
-  xTaskCreate(runMiner, "Miner0", 6000, (void*)0, 1, &minerTask1);
-  xTaskCreate(runMiner, "Miner1", 6000, (void*)1, 1, &minerTask2);
- 
+  xTaskCreate(runMiner, "Miner0", 6000, (void *)0, 1, &minerTask1);
+  xTaskCreate(runMiner, "Miner1", 6000, (void *)1, 1, &minerTask2);
+
   esp_task_wdt_add(minerTask1);
   esp_task_wdt_add(minerTask2);
 
@@ -153,7 +164,8 @@ void setup()
   setup_monitor();
 }
 
-void app_error_fault_handler(void *arg) {
+void app_error_fault_handler(void *arg)
+{
   // Get stack errors
   char *stack = (char *)arg;
 
@@ -164,16 +176,51 @@ void app_error_fault_handler(void *arg) {
   esp_restart();
 }
 
-void loop() {
-  // keep watching the push buttons:
-  #ifdef PIN_BUTTON_1
-    button1.tick();
-  #endif
+void loop()
+{
 
-  #ifdef PIN_BUTTON_2
-    button2.tick();
-  #endif
-  
+// keep watching the push buttons:
+#ifdef PIN_BUTTON_1
+  button1.tick();
+  if (IrReceiver.decode())
+  {
+
+    /*
+     * Print a summary of received data
+     */
+    if (IrReceiver.decodedIRData.protocol == UNKNOWN)
+    {
+      Serial.println(F("Received noise or an unknown (or not yet enabled) protocol"));
+      // We have an unknown protocol here, print extended info
+      IrReceiver.printIRResultRawFormatted(&Serial, true);
+      IrReceiver.resume(); // Do it here, to preserve raw data for printing with printIRResultRawFormatted()
+    }
+    else
+    {
+      IrReceiver.resume(); // Early enable receiving of the next IR frame
+      IrReceiver.printIRResultShort(&Serial);
+      IrReceiver.printIRSendUsage(&Serial);
+    }
+    Serial.println();
+
+    /*
+     * Finally, check the received data and perform actions according to the received command
+     */
+    if (IrReceiver.decodedIRData.command == 0x10)
+    {
+      // do something
+    }
+    else if (IrReceiver.decodedIRData.command == 0x11)
+    {
+      // do something else
+    }
+  }
+#endif
+
+#ifdef PIN_BUTTON_2
+  button2.tick();
+#endif
+
   wifiManagerProcess(); // avoid delays() in loop when non-blocking and other long running code
 
   vTaskDelay(50 / portTICK_PERIOD_MS);
