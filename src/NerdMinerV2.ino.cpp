@@ -15,9 +15,6 @@
 #include "drivers/storage/SDCard.h"
 #include "timeconst.h"
 
-// #include "PinDefinitionsAndMore.h"
-#include <IRremote.hpp> // include the library
-
 #define IR_RECEIVE_PIN 32
 
 // 3 seconds WDT
@@ -43,6 +40,9 @@ unsigned long start = millis();
 const char *ntpServer = "pool.ntp.org";
 
 // void runMonitor(void *name);
+
+// #include "PinDefinitionsAndMore.h"
+#include <IRremote.hpp> // include the library
 
 /********* INIT *****/
 void setup()
@@ -76,16 +76,28 @@ void setup()
   button1.attachMultiClick(alternateScreenState);
 #endif
 
+//#if defined(PIN_BUTTON_1) && defined(PIN_BUTTON_2) // Button 1 of two button device
+//  button1.setPressMs(5 * SECOND_MS);
+//  button1.attachClick(alternateScreenState);
+//  button1.attachDoubleClick(alternateScreenRotation);
+//#endif
+
+// for IR control
 #if defined(PIN_BUTTON_1) && defined(PIN_BUTTON_2) // Button 1 of two button device
   button1.setPressMs(5 * SECOND_MS);
   button1.attachClick(alternateScreenState);
   button1.attachDoubleClick(alternateScreenRotation);
 #endif
 
+//#if defined(PIN_BUTTON_2) // Button 2 of two button device
+//  button2.setPressMs(5 * SECOND_MS);
+//  button2.attachClick(switchToNextScreen);
+//  button2.attachLongPressStart(reset_configuration);
+//#endif
+
+// for IR control
 #if defined(PIN_BUTTON_2) // Button 2 of two button device
-  button2.setPressMs(5 * SECOND_MS);
-  button2.attachClick(switchToNextScreen);
-  button2.attachLongPressStart(reset_configuration);
+  button2.attachClick(switchToNextScreen_Ir);
 #endif
 
   /******** INIT NERDMINER ************/
