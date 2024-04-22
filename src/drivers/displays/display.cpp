@@ -1,6 +1,3 @@
-#define USE_IRREMOTE_HPP_AS_PLAIN_INCLUDE
-#include <IRremote.hpp>
-
 #include "display.h"
 #include <Arduino.h>
 
@@ -118,11 +115,4 @@ void animateCurrentScreen(unsigned long frame)
 void doLedStuff(unsigned long frame)
 {
   currentDisplayDriver->doLedStuff(frame);
-}
-
-void switchToNextScreen_Ir()
-{
-
-currentDisplayDriver->current_cyclic_screen = (currentDisplayDriver->current_cyclic_screen + 1) % currentDisplayDriver->num_cyclic_screens;
-
 }

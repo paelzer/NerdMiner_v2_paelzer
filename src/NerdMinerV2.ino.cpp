@@ -1,5 +1,4 @@
-#define DECODE_NEC
-#include <Wire.h>
+//#include <Wire.h>
 
 #include <Arduino.h>
 #include <WiFi.h>
@@ -14,8 +13,6 @@
 #include "drivers/displays/display.h"
 #include "drivers/storage/SDCard.h"
 #include "timeconst.h"
-
-#define IR_RECEIVE_PIN 32
 
 // 3 seconds WDT
 #define WDT_TIMEOUT 3
@@ -39,10 +36,8 @@ SDCard SDCrd = SDCard();
 unsigned long start = millis();
 const char *ntpServer = "pool.ntp.org";
 
-// void runMonitor(void *name);
 
-// #include "PinDefinitionsAndMore.h"
-#include <IRremote.hpp> // include the library
+// void runMonitor(void *name);
 
 /********* INIT *****/
 void setup()
@@ -76,28 +71,10 @@ void setup()
   button1.attachMultiClick(alternateScreenState);
 #endif
 
-//#if defined(PIN_BUTTON_1) && defined(PIN_BUTTON_2) // Button 1 of two button device
-//  button1.setPressMs(5 * SECOND_MS);
-//  button1.attachClick(alternateScreenState);
-//  button1.attachDoubleClick(alternateScreenRotation);
-//#endif
-
-// for IR control
-#if defined(PIN_BUTTON_1) && defined(PIN_BUTTON_2) // Button 1 of two button device
-  button1.setPressMs(5 * SECOND_MS);
-  button1.attachClick(alternateScreenState);
-  button1.attachDoubleClick(alternateScreenRotation);
-#endif
-
-//#if defined(PIN_BUTTON_2) // Button 2 of two button device
-//  button2.setPressMs(5 * SECOND_MS);
-//  button2.attachClick(switchToNextScreen);
-//  button2.attachLongPressStart(reset_configuration);
-//#endif
-
-// for IR control
 #if defined(PIN_BUTTON_2) // Button 2 of two button device
-  button2.attachClick(switchToNextScreen_Ir);
+  button2.setPressMs(5 * SECOND_MS);
+  button2.attachClick(switchToNextScreen);
+  button2.attachLongPressStart(reset_configuration);
 #endif
 
   /******** INIT NERDMINER ************/
@@ -111,13 +88,6 @@ void setup()
 
   /******** INIT DISPLAY ************/
   initDisplay();
-
-  // IR stuff
-  Serial.println(F("START " __FILE__ " from " __DATE__ "\r\nUsing library version " VERSION_IRREMOTE));
-  IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
-
-  Serial.print(F("Ready to receive IR signals of protocols: "));
-  printActiveIRProtocols(&Serial);
 
   /******** PRINT INIT SCREEN *****/
   drawLoadingScreen();
@@ -190,43 +160,9 @@ void app_error_fault_handler(void *arg)
 
 void loop()
 {
-
 // keep watching the push buttons:
 #ifdef PIN_BUTTON_1
   button1.tick();
-  if (IrReceiver.decode())
-  {
-
-    /*
-     * Print a summary of received data
-     */
-    if (IrReceiver.decodedIRData.protocol == UNKNOWN)
-    {
-      Serial.println(F("Received noise or an unknown (or not yet enabled) protocol"));
-      // We have an unknown protocol here, print extended info
-      IrReceiver.printIRResultRawFormatted(&Serial, true);
-      IrReceiver.resume(); // Do it here, to preserve raw data for printing with printIRResultRawFormatted()
-    }
-    else
-    {
-      IrReceiver.resume(); // Early enable receiving of the next IR frame
-      IrReceiver.printIRResultShort(&Serial);
-      IrReceiver.printIRSendUsage(&Serial);
-    }
-    Serial.println();
-
-    /*
-     * Finally, check the received data and perform actions according to the received command
-     */
-    if (IrReceiver.decodedIRData.command == 0x10)
-    {
-      // do something
-    }
-    else if (IrReceiver.decodedIRData.command == 0x11)
-    {
-      // do something else
-    }
-  }
 #endif
 
 #ifdef PIN_BUTTON_2
