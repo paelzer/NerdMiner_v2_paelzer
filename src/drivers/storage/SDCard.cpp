@@ -34,7 +34,9 @@ SDCard::SDCard(int ID):cardInitialized_(false),cardBusy_(false)
     }
     iSD_ = &SD;
 #endif // interface type
+#ifndef SDMMC_1BIT_FIX
     initSDcard();
+#endif
 }
 
 SDCard::~SDCard()
@@ -55,6 +57,15 @@ SDCard::~SDCard()
 bool SDCard::cardBusy()
 {
     return cardBusy_;
+}
+
+/// @brief End the card to free heap space.
+void SDCard::terminate()
+{
+    iSD_->end();
+#ifdef BUILD_SDSPI
+    ispi_->end(); 
+#endif   
 }
 
 /// @brief Transfer settings from config file on a SD card to the device.
@@ -96,9 +107,13 @@ bool SDCard::loadConfigFile(TSettings* Settings)
                 if (!error)
                 {
                     serializeJsonPretty(json, Serial);
-                    Serial.print('\n');
-                    Settings->WifiSSID = json[JSON_KEY_SSID] | Settings->WifiSSID;
-                    Settings->WifiPW = json[JSON_KEY_PASW] | Settings->WifiPW;
+                    Serial.print('\n');    
+                    if (json.containsKey(JSON_KEY_SSID)) {                
+                        Settings->WifiSSID = json[JSON_KEY_SSID] | Settings->WifiSSID;
+                    }
+                    if (json.containsKey(JSON_KEY_PASW)) {
+                        Settings->WifiPW = json[JSON_KEY_PASW] | Settings->WifiPW;
+                    }
                     Settings->PoolAddress = json[JSON_KEY_POOLURL] | Settings->PoolAddress;
                     strcpy(Settings->PoolPassword, json[JSON_KEY_POOLPASS] | Settings->PoolPassword);
                     strcpy(Settings->BtcWallet, json[JSON_KEY_WALLETID] | Settings->BtcWallet);
@@ -108,6 +123,13 @@ bool SDCard::loadConfigFile(TSettings* Settings)
                         Settings->Timezone = json[JSON_KEY_TIMEZONE].as<int>();
                     if (json.containsKey(JSON_KEY_STATS2NV))
                         Settings->saveStats = json[JSON_KEY_STATS2NV].as<bool>();
+                    if (json.containsKey(JSON_KEY_INVCOLOR)) {
+                        Settings->invertColors = json[JSON_KEY_INVCOLOR].as<bool>();
+                    } else {
+                        Settings->invertColors = false;
+                    }
+                    // Serial.printf("Carteira Lida SD:%s\n", Settings.BtcWallet);       
+                    Serial.printf("Carteira Lida SDs:%s\n", Settings->BtcWallet);                       
                     return true;
                 }
                 else
@@ -156,7 +178,7 @@ bool SDCard::cardAvailable()
 /// @return  true on success
 bool SDCard::initSDcard()
 {
-    if (!cardAvailable())
+    if (!cardAvailable()) 
     {
         Serial.println("SDCard: init SD card interface.");
 #if defined (BUILD_SDMMC_4)
@@ -167,7 +189,12 @@ bool SDCard::initSDcard()
 #elif defined (BUILD_SDMMC_1)
 #warning SDMMC : 1 - bit mode is not always working. If you experience issues, try other modes.
         iSD_->setPins(SDMMC_CLK, SDMMC_CMD, SDMMC_D0);
+#ifdef SD_FREQUENCY
+        // Need to lower frequency to 20000 for proper detection
+        cardInitialized_ = iSD_->begin("/sd", true, false, SD_FREQUENCY);
+#else
         cardInitialized_ = iSD_->begin("/sd", true);
+#endif
         Serial.println("SDCard: 1-Bit Mode.");
     }
 #elif defined (BUILD_SDSPI)
@@ -184,7 +211,6 @@ bool SDCard::initSDcard()
 }
 
 #else
-
 SDCard::SDCard(int ID) {}
 SDCard::~SDCard() {}
 void SDCard::SD2nvMemory(nvMemory* nvMem, TSettings* Settings) {};
@@ -192,5 +218,5 @@ bool SDCard::loadConfigFile(TSettings* Settings) { return false; }
 bool SDCard::initSDcard() { return false; }
 bool SDCard::cardAvailable() { return false; }
 bool SDCard::cardBusy() { return false; }
-
+void SDCard::terminate() {}
 #endif //BUILD_SDMMC

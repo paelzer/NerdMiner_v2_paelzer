@@ -25,6 +25,7 @@ extern monitor_data mMonitor;
 
 //from saved config
 extern TSettings Settings; 
+bool invertColors = false;
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", 3600, 60000);
@@ -32,6 +33,8 @@ unsigned int bitcoin_price=0;
 String current_block = "793261";
 global_data gData;
 pool_data pData;
+String poolAPIUrl;
+
 
 void setup_monitor(void){
     /******** TIME ZONE SETTING *****/
@@ -42,7 +45,11 @@ void setup_monitor(void){
     // GMT +2 in seconds (zona horaria de Europa Central)
     timeClient.setTimeOffset(3600 * Settings.Timezone);
 
-    Serial.println("TimeClient setup done");    
+    Serial.println("TimeClient setup done");
+#ifdef NERDMINER_T_HMI
+    poolAPIUrl = getPoolAPIUrl();
+    Serial.println("poolAPIUrl: " + poolAPIUrl);
+#endif
 }
 
 unsigned long mGlobalUpdate =0;
@@ -317,19 +324,52 @@ coin_data getCoinData(unsigned long mElapsed)
   return data;
 }
 
+String getPoolAPIUrl(void) {
+    poolAPIUrl = String(getPublicPool);
+    if (Settings.PoolAddress == "public-pool.io") {
+        poolAPIUrl = "https://public-pool.io:40557/api/client/";
+    } 
+    else {
+        if (Settings.PoolAddress == "nerdminers.org") {
+            poolAPIUrl = "https://pool.nerdminers.org/users/";
+        }
+        else {
+            switch (Settings.PoolPort) {
+                case 3333:
+                    if (Settings.PoolAddress == "pool.sethforprivacy.com")
+                        poolAPIUrl = "https://pool.sethforprivacy.com/api/client/";
+                    // Add more cases for other addresses with port 3333 if needed
+                    break;
+                case 2018:
+                    // Local instance of public-pool.io on Umbrel or Start9
+                    poolAPIUrl = "http://" + Settings.PoolAddress + ":2019/api/client/";
+                    break;
+                default:
+                    poolAPIUrl = String(getPublicPool);
+                    break;
+            }
+        }
+    }
+    return poolAPIUrl;
+}
+
 pool_data getPoolData(void){
     //pool_data pData;    
     if((mPoolUpdate == 0) || (millis() - mPoolUpdate > UPDATE_POOL_min * 60 * 1000)){      
-        if (WiFi.status() != WL_CONNECTED) return pData;
-            
+        if (WiFi.status() != WL_CONNECTED) return pData;            
         //Make first API call to get global hash and current difficulty
         HTTPClient http;
         http.setReuse(true);        
         try {          
           String btcWallet = Settings.BtcWallet;
-          Serial.println(btcWallet);
+          // Serial.println(btcWallet);
           if (btcWallet.indexOf(".")>0) btcWallet = btcWallet.substring(0,btcWallet.indexOf("."));
+#ifdef NERDMINER_T_HMI
+          Serial.println("Pool API : " + poolAPIUrl+btcWallet);
+          http.begin(poolAPIUrl+btcWallet);
+#else
           http.begin(String(getPublicPool)+btcWallet);
+#endif
           int httpCode = http.GET();
           if (httpCode == HTTP_CODE_OK) {
               String payload = http.getString();
@@ -364,10 +404,28 @@ pool_data getPoolData(void){
               }
               doc.clear();
               mPoolUpdate = millis();
+              Serial.println("\n####### Pool Data OK!");               
+          } else {
+              Serial.println("\n####### Pool Data HTTP Error!");    
+              /* Serial.println(httpCode);
+              String payload = http.getString();
+              Serial.println(payload); */
+              // mPoolUpdate = millis();
+              pData.bestDifficulty = "P";
+              pData.workersHash = "E";
+              pData.workersCount = 0;
+              http.end();
+              return pData; 
           }
           http.end();
         } catch(...) {
+          Serial.println("####### Pool Error!");          
+          // mPoolUpdate = millis();
+          pData.bestDifficulty = "P";
+          pData.workersHash = "Error";
+          pData.workersCount = 0;
           http.end();
+          return pData;
         } 
     }
     return pData;
