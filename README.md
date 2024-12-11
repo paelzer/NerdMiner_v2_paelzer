@@ -8,12 +8,16 @@ The main aim of this project is to let you **learn more about minery** and to ha
 
 Original project https://github.com/valerio-vaccaro/HAN
 
-![image](images/bgNerdMinerV2.png)
+## Requirements
 
 ## Requirements
 
-- TTGO T-Display S3 or any supported boards (check Build tutorial 👇)
-- 3D BOX [here](3d_files/)
+- 64x32 dot matrix 
+##### (I bought a "P4" version, which means a distance of 4mm between two RGB LED's)(I bought a "P4" version, which means a distance of 4mm between two RGB LED's)
+- ESP32 S3 DevKit Microcontroller
+- 5 Volt power supply (mine is a 5A and works fine)
+- USB cable to connect the ESP32 to the computer to flash the firmware
+- Cable to wire up everything
 
 ### Project description
 
