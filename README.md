@@ -37,7 +37,6 @@ Every time an stratum job notification is received miner update its current work
 
 - ESP32-S3 Devkit ([Board Info](https://docs.platformio.org/en/latest/boards/espressif
 
-\*Affiliate links
 
 ### Flash firmware
 
