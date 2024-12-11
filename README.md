@@ -1,8 +1,8 @@
-# NerdSoloMiner
+# NerdSoloMiner on an RGB LED Matrix Panel
 
 **The NerdSoloMiner v2**
 
-This is a **free and open source project** that let you try to reach a bitcoin block with a small piece of hardware.
+This is a fork of the **free and open source project** called **The NerdSoloMiner V2** that let you try to reach a bitcoin block with a small piece of hardware.
 
 The main aim of this project is to let you **learn more about minery** and to have a beautiful piece of hardware in your desktop.
 
