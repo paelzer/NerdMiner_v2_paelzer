@@ -5,54 +5,6 @@
 DisplayDriver *currentDisplayDriver = &noDisplayDriver;
 #endif
 
-#ifdef M5STACK_DISPLAY
-DisplayDriver *currentDisplayDriver = &m5stackDisplayDriver;
-#endif
-
-#ifdef WT32_DISPLAY
-DisplayDriver *currentDisplayDriver = &wt32DisplayDriver;
-#endif
-
-#ifdef LED_DISPLAY
-DisplayDriver *currentDisplayDriver = &ledDisplayDriver;
-#endif
-
-#ifdef T_DISPLAY
-DisplayDriver *currentDisplayDriver = &tDisplayDriver;
-#endif
-
-#ifdef AMOLED_DISPLAY
-DisplayDriver *currentDisplayDriver = &amoledDisplayDriver;
-#endif
-
-#ifdef DONGLE_DISPLAY
-DisplayDriver *currentDisplayDriver = &dongleDisplayDriver;
-#endif
-
-#ifdef ESP32_2432S028R
-DisplayDriver *currentDisplayDriver = &esp32_2432S028RDriver;
-#endif
-
-#ifdef ESP32_2432S028_2USB
-DisplayDriver *currentDisplayDriver = &esp32_2432S028RDriver;
-#endif
-
-#ifdef T_QT_DISPLAY
-DisplayDriver *currentDisplayDriver = &t_qtDisplayDriver;
-#endif
-
-#ifdef V1_DISPLAY
-DisplayDriver *currentDisplayDriver = &tDisplayV1Driver;
-#endif
-
-#ifdef M5STICKC_DISPLAY
-DisplayDriver *currentDisplayDriver = &m5stickCDriver;
-#endif
-
-#ifdef T_HMI_DISPLAY
-DisplayDriver *currentDisplayDriver = &t_hmiDisplayDriver;
-#endif
-
 #ifdef ESP32_64x32px_Matrix
 DisplayDriver *currentDisplayDriver = &esp32_64x32px_matrix_driver;
 #endif
