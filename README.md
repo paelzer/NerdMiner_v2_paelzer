@@ -18,19 +18,16 @@ Original project https://github.com/valerio-vaccaro/HAN
 
 ### Project description
 
-**ESP32 implementing Stratum protocol** to mine on solo pool. Pool can be changed but originally works with [public-pool.io](https://web.public-pool.io) (where Nerdminers are supported).
+**For details to the NerdMinerV2 software implementation, please visit the original project page**
+This repo only provides additional information to get the NerdMinerV2 on a 64x32 RGB matrix panel and the features 
 
-This variant of the project is currently only working with ESP32-S3, but will also be adapted to work with common ESP32 chips. It uses WifiManager to modify miner settings and save them to SPIFF memory.
-Several screens are available:
+This variant of the project is currently only working with ESP32-S3, but will also be adapted to work with common ESP32 chips.
+
+These views are available:
 
 - NerdMiner Screen > Mining speed of Nerdminer
 - ClockMiner Screen > Clock miner
 - Current Bitcoin value
-
-This miner is multicore and multithreads, both cores are used to mine and several threads are used to implementing stratum work and wifi stuff.
-Every time an stratum job notification is received miner update its current work to not create stale shares.
-
-**IMPORTANT** Miner is not seen by all standard pools due to its low share difficulty. You can check miner work remotely using specific pools specified down or seeing logs via UART.
 
 
 #### Boards currently supported
@@ -50,9 +47,9 @@ Note: when BTC address of your selected wallet is not provided, mining will not 
 
 #### Wifi Accesspoint
 
-1. Connect to NerdMinerAP
-   - AP: NerdMinerAP
-   - PASS: MineYourCoins
+1. Connect your WiFi device to:
+   - Accesspoint: **NerdMinerAP**
+   - Password: **MineYourCoins**
 1. Set up your Wifi Network
 1. Add your BTC address
 1. Change the password if needed
@@ -62,24 +59,8 @@ Note: when BTC address of your selected wallet is not provided, mining will not 
 
 #### Pool selection
 
-Recommended low difficulty share pools:
+Visit the original NerdMinerV2 project page about details to mining pool selection. 
 
-| Pool URL          | Port  | Web URL                    | Status                                                             |
-| ----------------- | ----- | -------------------------- | ------------------------------------------------------------------ |
-| public-pool.io    | 21496 | https://web.public-pool.io | Open Source Solo Bitcoin Mining Pool supporting open source miners |
-| nerdminers.org    |       | https://nerdminers.org     | Team domain for future pool - Currently pointing to public-pool.io |
-| pool.nerdminer.io | 3333  | https://nerdminer.io       | Mantained by CHMEX                                                 |
-| pool.vkbit.com    | 3333  | https://vkbit.com/         | Mantained by djerfy - public-pool fork                             |
-| pool.pyblock.xyz  | 3333  | https://pool.pyblock.xyz/  | Mantained by curly60e                                              |
-| pool.sethforprivacy.com  | 3333  | https://pool.sethforprivacy.com/  | Mantained by @sethforprivacy - public-pool fork      |
-
-Other standard pools not compatible with low difficulty share:
-
-| Pool URL                 | Port | Web URL                                   |
-| ------------------------ | ---- | ----------------------------------------- |
-| solo.ckpool.org          | 3333 | https://solo.ckpool.org/                  |
-| btc.zsolo.bid            | 6057 | https://zsolo.bid/en/btc-solo-mining-pool |
-| eu.stratum.slushpool.com | 3333 | https://braiins.com/pool                  |
 
 ### Button (if connected)
 
@@ -88,4 +69,4 @@ Other standard pools not compatible with low difficulty share:
 - Tripple click > turn the screen off and on again.
 - Hold 5 seconds > **reset the configurations and reboot** your NerdMiner.
 
-Enjoy
+Have fun!
