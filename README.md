@@ -37,11 +37,11 @@ These views are available:
 
 ### Flash firmware
 
-Flashing is currently only possible via PlatformIO
+Flashing is currently only possible via PlatformIO.
 
 ## NerdMiner configuration
 
-After flashing, you will only need to setup your Wifi and BTC address.
+After flashing, you just need to setup your Wifi credentials and BTC address.
 
 Note: when BTC address of your selected wallet is not provided, mining will not be started.
 
@@ -65,8 +65,6 @@ Visit the original NerdMinerV2 project page about details to mining pool selecti
 ### Button (if connected)
 
 - One click > change screen.
-- Double click > change screen orientation.
-- Tripple click > turn the screen off and on again.
 - Hold 5 seconds > **reset the configurations and reboot** your NerdMiner.
 
 Have fun!
