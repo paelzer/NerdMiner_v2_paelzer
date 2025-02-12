@@ -215,7 +215,7 @@ void ssd1306_Display_DoLedStuff(unsigned long frame)
 
 CyclicScreenFunction ssd1306_DisplayCyclicScreens[] = {ssd1306_Display_MinerScreen, ssd1306_Display_ClockScreen};
 
-DisplayDriver esp32_super_mini_SSD1306_driver = {
+DisplayDriver esp32_s3_zero_SSD1306_driver = {
     ssd1306_Display_Init,
     ssd1306_Display_AlternateScreenState,
     ssd1306_Display_AlternateRotation,
