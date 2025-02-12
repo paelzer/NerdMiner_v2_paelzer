@@ -1,6 +1,6 @@
 #include "displayDriver.h"
 
-#ifdef ESP32_super_mini_SSD1306
+#ifdef ESP32_S3_Zero_SSD1306
 #include "version.h"
 #include "monitor.h"
 #include <Adafruit_GFX.h>
@@ -85,7 +85,7 @@ static const unsigned char PROGMEM logo_bmp[] =
 
 void ssd1306_Display_Init(void)
 {
-  Wire.setPins(6, 7); // I2C pins of the ESP32 super mini  I have tested with - there might be differences
+  Wire.setPins(8, 9); // I2C pins of the ESP32 super mini  I have tested with - there might be differences
 
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
   if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS))
