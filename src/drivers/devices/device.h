@@ -33,6 +33,8 @@
 #include "esp32_ssd1306.h"
 #elif defined(ESP32_super_mini_SSD1306)
 #include "esp32_super_mini_SSD1306.h"
+#elif defined(ESP32_S3_Zero_SSD1306)
+#include "esp32_s3_zero_SSD1306.h"
 
 
 #else
