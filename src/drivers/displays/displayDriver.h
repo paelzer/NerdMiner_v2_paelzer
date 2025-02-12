@@ -40,6 +40,7 @@ extern DisplayDriver m5stickCDriver;
 extern DisplayDriver esp32_st7735_driver;
 extern DisplayDriver esp32_ssd1306_driver;
 extern DisplayDriver esp32_super_mini_SSD1306_driver;
+extern DisplayDriver esp32_s3_zero_SSD1306_driver;
 
 #define SCREENS_ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 
