@@ -11,7 +11,7 @@
 #define HEIGHT 64
 
 #define OLED_RESET -1       // Reset pin # (or -1 if sharing Arduino reset pin)
-#define SCREEN_ADDRESS 0x3C ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
+#define SCREEN_ADDRESS 0x3C ///< See datasheet for Address
 
 Adafruit_SSD1306 display(WIDTH, HEIGHT, &Wire, OLED_RESET);
 
@@ -85,7 +85,7 @@ static const unsigned char PROGMEM logo_bmp[] =
 
 void ssd1306_Display_Init(void)
 {
-  Wire.setPins(8, 9); // I2C pins of the ESP32 super mini  I have tested with - there might be differences
+  Wire.setPins(8, 9); // I2C pins of the ESP32 super mini  I have tested with - can be redefined, if needed!
 
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
   if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS))
